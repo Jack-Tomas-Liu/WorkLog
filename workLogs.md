@@ -15,6 +15,8 @@ defaultConfig {
     }
 ```
 实际安装后的包名是com.sjzhvip
+但是需要特别注意工程中整体的包可以不改。但是跟微信回调相关的必需建立新包com.sjzhvip。放置相关的文件WXEntryActivity等。
+
 
 4 微信存在的缓存问题可能导致的问题
 
@@ -24,11 +26,24 @@ defaultConfig {
 =============================
 1 如何将自己的代码库共享，让其它的开发者通过 ```compile ****``` 就可以获取到。[链接地址。](http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0623/3097.html)
 
-=============================
-
 2 listview和scrollview 会出现ScrollView无法定位到顶部的现象，修复方式：
                     scrollView.post(new Runnable() {
                         public void run() {
                             scrollView.fullScroll(ScrollView.FOCUS_UP);
                         }
                     });
+
+================================
+1 RecycleView
+
+* 在只有一种item的情况下，缓存的ViewHolder的数目为RecyclerView在滑动过程中所能在一屏内容纳的最大item个数+2。(单布局，全屏最多的item数＋2）
+* 而有至少两种item显示的情况下，每种item的ViewHolder的缓存个数为单种item在一屏内最大显示个数+1（一种以上的布局，全屏显示item最多的布局所显示出的item数＋1）
+
+
+2 textview过长，显示省略。。
+
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:maxEms="7"
+
+                    
