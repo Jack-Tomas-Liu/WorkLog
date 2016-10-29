@@ -21,4 +21,6 @@ defaultConfig {
 * 更换签名后无法调起支付界面
 * 分享来源的文本和icon不能及时更新
 解决方式，清除缓存甚至删除应用。重新安装
+=============================
+1 如何将自己的代码库共享，让其它的开发者通过 ```compile ****``` 就可以获取到。[链接地址。](http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0623/3097.html)
 
