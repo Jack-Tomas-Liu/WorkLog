@@ -236,3 +236,33 @@ android studio关联源码失败
         </sourcePath>
  ```
 [参考自]("http://blog.csdn.net/nomousewch/article/details/38496133")
+
+===============================
+向下兼容到api16所做的工作，一个是adapter转换的问题，再一个是方法不存在的解决
+<h2>本周主要完成</h2>
+* 配合上线修改bug
+* 修复登录失败的偶发错误，这个错误是由于```retrofit cookiejar的回调写入cookie和读取cookie没有锁导致的。```。开发时偶发也跟访问用户少，接口响应速度有变化相关。
+* 项目向低版本适配：
+	- UI上的问题，主要集中在margin－start属性引起的低版本位置错乱。
+	- 低版本调用高版本方法：
+
+	  ```Calling new methods on older version```和U```sing inlined constants on older versions```。
+	  前者主要表现在：
+	  * Call requires API level 16 (current min is 15): android.view.View#setBackground
+	  * Call requires API level 16 (current min is 15): android.view.ViewTreeObserver#removeOnGlobalLayoutListener
+	  * Call requires API level 16 (current min is 15): android.widget.TextView#getLineSpacingMultiplier
+	  * android:windowTranslucentStatus requires API level 19 (current min is 15)
+	  解决方法是，判断不同的系统api，然后区别的调用方法。
+	  后者主要表现在：
+	  * Field requires API level 16 (current min is 15): android.view.View#SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+	  * Field requires API level 16 (current min is 15): android.view.View#SYSTEM_UI_FLAG_LAYOUT_STABLE
+	  解决方法就是自己定义相同值的变量。
+* 方法调用时序问题。
+  listview在前期版本，想要添加head或者foot，必须在```setAdapter方法```之前。这是因为添加head或者foot，默认的适配器由listadapter转为HeaderViewListAdapter。这样，向下兼容，如果不注意调用顺序，会造成adapter转换错误。解决方法就是取巧。
+
+  ```java
+  		listview.addHeaderview(footView);
+  		listview.setAdapter();
+  		listview.removeHeaderView(footview)//由于不需要，所以删除。只供转化adapter类型。
+
+  ```
