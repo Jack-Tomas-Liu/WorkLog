@@ -169,5 +169,40 @@ findviewById一次执行了
 	                }
 
 	    }
+也可以在事件，比如说点击事件中传过去。这样也能规避。上边的holder模式一定要注意所设置的tag的id不能是convientview一样的。这样会报转化错误。
+========================================
+scrollview在子布局不确定的时候跳动
 
-	        也可以在事件，比如说点击事件中传过去。这样也能规避。上边的holder模式一定要注意所设置的tag的id不能是convientview一样的。这样会报转化错误。
+##  1 ScrollView的滑动问题
+ScrollView在和ListView和GridView等需要动态加载数据导致scrollView跳动的问题。
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+解决方案1 调用scrollto 跳转到顶部。
+
+	``` java
+	      scrollView.post(new Runnable() {
+	         public void run() {
+	                scrollView.fullScroll(ScrollView.FOCUS_UP);
+	                    }
+	         });
+
+	```
+
+
+解决方案2 设置属性
+
+  ```java
+  		 <ScrollView>
+  		 	<RelativeLayout>
+  		 			<!--在scrollview的第一个子布局中加入下面两个属性值-->
+  		 			android:focusable="true"  
+					android:focusableInTouchMode="true"
+  		 	</RelativeLayout>
+  		 </ScrollView>
+
+
+  ```
+  
+
+  [参考1]("http://blog.csdn.net/icyfox_bupt/article/details/15026299")
+  [参考2](http://blog.csdn.net/huangbiao86/article/details/7388632)
