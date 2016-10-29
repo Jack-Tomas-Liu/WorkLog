@@ -217,3 +217,22 @@ android studio 不错的插件
 [从上述地址下载插件]("http://blog.csdn.net/maosidiaoxian/article/details/44992655")
 
 ============================
+android studio关联源码失败
+
+<h2>AS无法关联源码</h2>
+
+ 修改 jdk.table.xml
+
+ 先找到文件
+ ```find / -name jdk*.xml```,找到sourcePath，修改内容如下
+
+
+ ```java
+ <sourcePath>
+            <root type="composite">
+                <root type="simple" url="file://Users/liuxin/Library/Android/sdk/sources/android-19" />
+            </root>
+
+        </sourcePath>
+ ```
+[参考自]("http://blog.csdn.net/nomousewch/article/details/38496133")
