@@ -73,8 +73,101 @@ source .bash_profile 使配置生效。
 `gradle` 生效。
 
 
-**2 **
+===================================
+list复用造成的问题
+I**ListView错位**
 
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:maxEms="7"
+滑动ListView后数据显示错位，是由于AbListView中获取getView()和滑动操作是异步进行的，其中滑动操作在一个FlingRunnable子线程中运行。这就导致了在ListView在滑动时可能已经滑动到了第十行，但可能第二行的数据这时就被直接使用了，这就是导致数据加载错乱的根本原因。
+
+唯一的解决方案是：
+
+只在convertview中缓存该ChildView的layout，并且缓存数据（重新获取数据并加载也可以）；
+
+view的缓存，避免多次findviewByID
+
+ 		`static class ViewHolder {
+
+        TextView subContentTextView1;
+        TextView subNameTextView1;
+        TextView subPraisedNumTextView1;
+        ImageView subPraisedImageView1;
+        RelativeLayout subComment1;
+        LinearLayout ll_praise_area;//扩大点击区域
+
+    }`
+findviewById一次执行了
+
+	`if (convertView == null) {
+	            viewHolder = new ViewHolder();
+	            convertView = LayoutInflater.from(context).inflate(R.layout.comment_answer_item_layout,null);
+	            viewHolder.subContentTextView1 = (TextView) convertView.findViewById(R.id.subComment_item_content_textView);
+
+
+	            convertView.setTag(viewHolder);
+	        } else {
+	            viewHolder = (ViewHolder) convertView.getTag();
+	        }`
+赋值操作
+
+
+       ` final CommentAnswerListBean.AnswerRecord record = records.get(position);
+        viewHolder.subNameTextView1.setText(record.getNickname());
+
+        viewHolder.subContentTextView1.setText(record.getContent());
+        viewHolder.subPraisedNumTextView1.setText(record.getUp_count());
+        if (record.is_helpup()) {
+            viewHolder.subPraisedImageView1.setSelected(true);
+        } else {
+            viewHolder.subPraisedImageView1.setSelected(false);
+        }
+`
+每个Item 内需要修改的view和数据缓存
+
+    `static class ChangeNum_Status{
+        public ViewHolder viewHolder;//需要修改的子view所在的行。不需要修改的，不需要重复赋值
+        public CommentAnswerListBean.AnswerRecord record;
+    }`
+
+给缓存赋值
+
+	`final ChangeNum_Status changeNum_status = new ChangeNum_Status();
+	        changeNum_status.commentId = record.getId();
+	        changeNum_status.viewHolder = viewHolder;
+	        changeNum_status.record = record;
+	        viewHolder.ll_praise_area.setTag(changeNum_status);  `  
+
+设置点击区域
+
+	` viewHolder.ll_praise_area.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ChangeNum_Status changeNum_status1 = (ChangeNum_Status)view.getTag();
+                if (UserManager.checkLocalLoginStatus()){
+                    Operate(changeNum_status1.viewHolder,changeNum_status1.record);
+                }else{
+                    ((BaseActivity)context).startLogin(new Runnable() {
+                        @Override
+                        public void run() {
+                            Operate(viewHolder,changeNum_status.record);
+                        }
+                    });
+                }
+            }
+        });   `    
+
+接受传值
+
+	 private void Operate(final ViewHolder viewHolder, final CommentAnswerListBean.AnswerRecord record){
+	        if(!viewHolder.subPraisedImageView1.isSelected()){
+
+	            cachePraise(viewHolder,Integer.valueOf(viewHolder.subPraisedNumTextView1.getText().toString()),record);
+	            //添加赞
+	            BaseManager.submitPraiseToCommentResponse(record.getId(), new BaseManager.CommentOperationCallback() {
+	                @Override
+	                public void onSuccess() {
+	                    praiseChangeListener.changeStatus(true);
+	                }
+
+	    }
+
+	        也可以在事件，比如说点击事件中传过去。这样也能规避。上边的holder模式一定要注意所设置的tag的id不能是convientview一样的。这样会报转化错误。
