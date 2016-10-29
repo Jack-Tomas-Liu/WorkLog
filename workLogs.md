@@ -202,7 +202,18 @@ ScrollView在和ListView和GridView等需要动态加载数据导致scrollView�
 
 
   ```
-  
+
 
   [参考1]("http://blog.csdn.net/icyfox_bupt/article/details/15026299")
   [参考2](http://blog.csdn.net/huangbiao86/article/details/7388632)
+===========================
+android studio 不错的插件
+
+## 集成开发环境的插件下载
+
+[Intellij Idea Plugin官网地址]("http://blog.csdn.net/maosidiaoxian/article/details/44992655")
+
+## Android Studio 如何安装插件
+[从上述地址下载插件]("http://blog.csdn.net/maosidiaoxian/article/details/44992655")
+
+============================
