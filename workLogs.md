@@ -24,3 +24,11 @@ defaultConfig {
 =============================
 1 如何将自己的代码库共享，让其它的开发者通过 ```compile ****``` 就可以获取到。[链接地址。](http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0623/3097.html)
 
+=============================
+
+2 listview和scrollview 会出现ScrollView无法定位到顶部的现象，修复方式：
+                    scrollView.post(new Runnable() {
+                        public void run() {
+                            scrollView.fullScroll(ScrollView.FOCUS_UP);
+                        }
+                    });
