@@ -309,6 +309,7 @@ android studio有两种方式关联源码。一种是用sdk source下的源文�
 <h2>非常不错的源码库，各种特效，技术</h2>
 
 [不错的特效]("https://github.com/Trinea/android-open-project")
+
 ==================================
 登录失败,app升级出现的序列化和混淆的冲突
 
@@ -345,3 +346,11 @@ android studio有两种方式关联源码。一种是用sdk source下的源文�
 	-keep class com.sjzh.net**{*;}
 ```
 参考：http://www.tuicool.com/articles/UzIRbmB
+
+==============================
+滑动删除menu工程集成过程中遇到的问题：无法滑动。
+从好的布局好的adapter中继承出来的文件有部分问题：图片不能滑动。
+
+试想：把好的布局里加入不同的布局。是不是只有一行的行。
+就是监听的问题。
+因为给item布局添加了监听事件，造成滑动无效。
