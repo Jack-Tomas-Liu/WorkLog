@@ -384,3 +384,6 @@ IOS是用objective-c开发的，属于编译语言，无需虚拟机，无需解
 第二点，方法访问权限是私有的，如何调用：
 ObjectOutputStream使用了反射来寻找是否声明了这两个方法。因为ObjectOutputStream使用getPrivateMethod，所以这些方法不得不被声明为priate以至于供ObjectOutputStream来使用。已经测试过，换成其他的访问权限不成。
 ======================================
+
+盛景智慧项目中，扫码使用的是zxingcode，改变扫码布局，只需要重写布局文件zxing_barcode_scanner，然后需要的地方，直接startActivity:CaptureActivity;那么当初为什么要加一个空的ScanfActivity呢？（继承CaptureActivity，只在oncreat方法里，super.Oncreate),出发点是要让保持竖屏。
+======================================
